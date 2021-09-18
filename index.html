@@ -58,119 +58,135 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#typescript-boilerplate-for-2021" id="typescript-boilerplate-for-2021" style="color: inherit; text-decoration: none;">
-					<h1>TypeScript Boilerplate for 2021</h1>
+				<a href="#type-checked-query-string" id="type-checked-query-string" style="color: inherit; text-decoration: none;">
+					<h1>Type-checked query string</h1>
 				</a>
-				<p><a href="https://github.com/metachris/typescript-boilerplate/actions?query=workflow%3A%22Build+and+test%22"><img src="https://github.com/metachris/typescript-boilerplate/workflows/Lint%20and%20test/badge.svg" alt="Build and test status"></a></p>
-				<p>TypeScript project boilerplate with modern tooling, for Node.js programs, libraries and browser modules. Get started quickly and right-footed 🚀</p>
+				<blockquote>
+					<p><code>use-search</code> is a simple library that helps your deal with all the shit with the query string on the url-bar. Handle <code>search</code> like you <code>React.useState</code>, with validation against arbitrary input!</p>
+				</blockquote>
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h2>Install</h2>
+				</a>
+				<pre><code><span style="color: #001080">yarn</span><span style="color: #000000"> </span><span style="color: #001080">add</span><span style="color: #000000"> @</span><span style="color: #001080">monoid</span><span style="color: #000000">-</span><span style="color: #001080">dev</span><span style="color: #000000">/</span><span style="color: #001080">use</span><span style="color: #000000">-</span><span style="color: #001080">search</span>
+</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<pre><code class="language-tsx"><span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">React</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;react&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">ReactDOM</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;react-dom&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #0000FF">*</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">t</span><span style="color: #000000"> </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;io-ts&#039;</span><span style="color: #000000">; </span><span style="color: #008000">// For more information about io-ts, please click https://gcanti.github.io/io-ts/</span>
+
+<span style="color: #AF00DB">import</span><span style="color: #000000"> </span><span style="color: #001080">useSearch</span><span style="color: #000000">, { </span><span style="color: #001080">SearchConfigProvider</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@monoid-dev/use-search&#039;</span><span style="color: #000000">;</span>
+
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">Page</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0070C1">search</span><span style="color: #000000">, </span><span style="color: #008000">// The parsed { id: string | undefined } object</span>
+<span style="color: #000000">    </span><span style="color: #0070C1">updateSearch</span><span style="color: #000000">, </span><span style="color: #008000">// The method to update the object</span>
+<span style="color: #000000">  } = </span><span style="color: #795E26">useSearch</span><span style="color: #000000">(</span><span style="color: #001080">t</span><span style="color: #000000">.</span><span style="color: #795E26">type</span><span style="color: #000000">({</span>
+<span style="color: #000000">    </span><span style="color: #001080">id:</span><span style="color: #000000"> </span><span style="color: #001080">t</span><span style="color: #000000">.</span><span style="color: #795E26">union</span><span style="color: #000000">([</span><span style="color: #001080">t</span><span style="color: #000000">.</span><span style="color: #001080">undefined</span><span style="color: #000000">,  </span><span style="color: #001080">t</span><span style="color: #000000">.</span><span style="color: #001080">string</span><span style="color: #000000">]),  </span><span style="color: #008000">// Define your query type here</span>
+<span style="color: #000000">  }));</span>
+
+<span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;&gt;</span>
+<span style="color: #000000">      </span><span style="color: #0000FF">{</span><span style="color: #267F99">JSON</span><span style="color: #000000FF">.</span><span style="color: #795E26">stringify</span><span style="color: #000000FF">(</span><span style="color: #001080">search</span><span style="color: #000000FF">)</span><span style="color: #0000FF">}</span>
+
+<span style="color: #000000">      </span><span style="color: #800000">&lt;button</span>
+<span style="color: #000000">        </span><span style="color: #FF0000">onClick</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #000000FF">() </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000FF"> </span><span style="color: #795E26">updateSearch</span><span style="color: #000000FF">({ </span><span style="color: #001080">id:</span><span style="color: #000000FF"> </span><span style="color: #267F99">String</span><span style="color: #000000FF">(</span><span style="color: #795E26">parseInt</span><span style="color: #000000FF">(</span><span style="color: #001080">search</span><span style="color: #000000FF">?.</span><span style="color: #001080">id</span><span style="color: #000000FF"> </span><span style="color: #000000">??</span><span style="color: #000000FF"> </span><span style="color: #A31515">&#039;0&#039;</span><span style="color: #000000FF">) </span><span style="color: #000000">+</span><span style="color: #000000FF"> </span><span style="color: #098658">1</span><span style="color: #000000FF">) })</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">      </span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">        Update Search</span>
+<span style="color: #000000">      </span><span style="color: #800000">&lt;/button&gt;</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;/&gt;</span>
+<span style="color: #000000">  );</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #001080">ReactDOM</span><span style="color: #000000">.</span><span style="color: #795E26">render</span><span style="color: #000000">((</span>
+<span style="color: #000000">  </span><span style="color: #800000">&lt;</span><span style="color: #267F99">SearchConfigProvider</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;</span><span style="color: #267F99">Page</span><span style="color: #000000"> </span><span style="color: #800000">/&gt;</span>
+<span style="color: #000000">  </span><span style="color: #800000">&lt;/</span><span style="color: #267F99">SearchConfigProvider</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">), </span><span style="color: #001080">document</span><span style="color: #000000">.</span><span style="color: #001080">body</span><span style="color: #000000">);</span>
+</code></pre>
+				<a href="#apis" id="apis" style="color: inherit; text-decoration: none;">
+					<h2>APIs</h2>
+				</a>
 				<ul>
-					<li><a href="https://www.typescriptlang.org/">TypeScript 4</a></li>
-					<li>Optionally <a href="https://esbuild.github.io/">esbuild</a> to bundle for browsers (and Node.js)</li>
-					<li>Linting with <a href="https://github.com/typescript-eslint/typescript-eslint">typescript-eslint</a> (<a href="https://palantir.github.io/tslint/">tslint</a> is deprecated)</li>
-					<li>Testing with <a href="https://jestjs.io/docs/getting-started">Jest</a> (and <a href="https://www.npmjs.com/package/ts-jest">ts-jest</a>)</li>
-					<li>Publishing to npm</li>
-					<li>Continuous integration (<a href="https://docs.github.com/en/actions">GitHub Actions</a> / <a href="https://docs.gitlab.com/ee/ci/">GitLab CI</a>)</li>
-					<li>Automatic API documentation with <a href="https://typedoc.org/guides/doccomments/">TypeDoc</a></li>
+					<li><p>useSearch</p>
+						<pre><code class="language-tsx"><span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">useSearch</span><span style="color: #000000">&lt;</span><span style="color: #267F99">T</span><span style="color: #000000">&gt;(</span><span style="color: #001080">type</span><span style="color: #000000">: </span><span style="color: #267F99">t</span><span style="color: #000000">.</span><span style="color: #267F99">Type</span><span style="color: #000000">&lt;</span><span style="color: #267F99">T</span><span style="color: #000000">&gt;, </span><span style="color: #001080">config</span><span style="color: #000000">?: </span><span style="color: #267F99">UseSearchConfig</span><span style="color: #000000">)</span>
+</code></pre>
+						<p>Parameters:</p>
+						<ul>
+							<li><code>type</code> The <code>io-ts</code> type of the parsed search.</li>
+							<li><code>config</code> The local <a href="#UseSearchConfig">configuration</a> for the search, shallowly merged with the current <code>UseSearchConfig</code> in the context.</li>
+						</ul>
+						<p>Return Type:</p>
+						<ul>
+							<li><code>search: T | undefined</code> The parsed and validated search string. Returns <code>undefined</code> when there&#39;s an error.</li>
+							<li><code>setSearch: T</code> Reset the search string, navigating to the new href.</li>
+							<li><code>updateSearch: Partial&lt;T&gt;</code> Partially update the search string, navigating to the new href.</li>
+						</ul>
+					</li>
+					<li><p>UseSearchConfig</p>
+					</li>
 				</ul>
-				<p>See also the introduction blog post: <strong><a href="https://www.metachris.com/2021/03/bootstrapping-a-typescript-node.js-project/">Starting a TypeScript Project in 2021</a></strong>.</p>
-				<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
-					<h2>Getting Started</h2>
-				</a>
-				<pre><code class="language-bash"><span style="color: #008000"># Clone the repository (you can also click &quot;Use this template&quot;)</span>
-<span style="color: #000000">git clone https://github.com/metachris/typescript-boilerplate.git your_project_name</span>
-<span style="color: #795E26">cd</span><span style="color: #000000"> your_project_name</span>
-
-<span style="color: #008000"># Edit `package.json` and `tsconfig.json` to your liking</span>
-<span style="color: #000000">...</span>
-
-<span style="color: #008000"># Install dependencies</span>
-<span style="color: #000000">yarn install</span>
-
-<span style="color: #008000"># Now you can run various yarn commands:</span>
-<span style="color: #000000">yarn cli</span>
-<span style="color: #000000">yarn lint</span>
-<span style="color: #000000">yarn </span><span style="color: #795E26">test</span>
-<span style="color: #000000">yarn build-all</span>
-<span style="color: #000000">yarn ts-node &lt;filename&gt;</span>
-<span style="color: #000000">yarn esbuild-browser</span>
-<span style="color: #000000">...</span>
+				<pre><code class="language-tsx"><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">UseSearchConfig</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #795E26">parse</span><span style="color: #000000">?: (</span><span style="color: #001080">q</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">unknown</span><span style="color: #000000">; </span><span style="color: #008000">// The method to parse the search string, by default using `query-string` with `{ arrayFormat: &#039;bracket-separator&#039; }`.</span>
+<span style="color: #000000">  </span><span style="color: #795E26">stringify</span><span style="color: #000000">?: (</span><span style="color: #001080">v</span><span style="color: #000000">: </span><span style="color: #267F99">Record</span><span style="color: #000000">&lt;</span><span style="color: #267F99">string</span><span style="color: #000000">, </span><span style="color: #267F99">unknown</span><span style="color: #000000">&gt;) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">string</span><span style="color: #000000">; </span><span style="color: #008000">// The method to stringify the search string from your object, by default using `query-string` with `{ arrayFormat: &#039;bracket-separator&#039; }`.</span>
+<span style="color: #000000">  </span><span style="color: #001080">errorPolicy</span><span style="color: #000000">?: </span><span style="color: #A31515">&#039;throw&#039;</span><span style="color: #000000"> | </span><span style="color: #A31515">&#039;return&#039;</span><span style="color: #000000">; </span><span style="color: #008000">// If &#039;throw&#039;, throws an error when an error happens. Warning: will cause a white screen when ErrorBoundary is not set up.</span>
+<span style="color: #000000">  </span><span style="color: #795E26">useRouter</span><span style="color: #000000">?: () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">Router</span><span style="color: #000000">; </span><span style="color: #008000">// The function that returns a Router object. It is called once per rendering thus safe to pass a React hook here. By default uses the native window.location methods. See API Router.</span>
+<span style="color: #000000">  </span><span style="color: #795E26">omitValue</span><span style="color: #000000">?: (</span><span style="color: #001080">value</span><span style="color: #000000">: </span><span style="color: #267F99">unknown</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">void</span><span style="color: #000000">; </span><span style="color: #008000">// When to omit value in the query string. By default we omit `undefiend`, `null` and empty or all-whitespace strings.</span>
+<span style="color: #000000">}</span>
 </code></pre>
 				<ul>
-					<li>Take a look at all the scripts in <a href="https://github.com/metachris/typescript-boilerplate/blob/master/package.json"><code>package.json</code></a></li>
-					<li>For publishing to npm, use <code>yarn publish</code> (or <code>npm publish</code>)</li>
+					<li>Router</li>
 				</ul>
-				<a href="#esbuild" id="esbuild" style="color: inherit; text-decoration: none;">
-					<h2>esbuild</h2>
-				</a>
-				<p><a href="https://esbuild.github.io/">esbuild</a> is an extremely fast bundler that supports a <a href="https://esbuild.github.io/content-types/#typescript">large part of the TypeScript syntax</a>. This project uses it to bundle for browsers (and Node.js if you want).</p>
-				<pre><code class="language-bash"><span style="color: #008000"># Build for browsers</span>
-<span style="color: #000000">yarn esbuild-browser:dev</span>
-<span style="color: #000000">yarn esbuild-browser:watch</span>
-
-<span style="color: #008000"># Build the cli for node</span>
-<span style="color: #000000">yarn esbuild-node:dev</span>
-<span style="color: #000000">yarn esbuild-node:watch</span>
+				<pre><code class="language-tsx"><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">Router</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">pathname</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">; </span><span style="color: #008000">// The current pathname, e.g. the `/search` https://www.google.com.hk/search?q=ErrorBoundary</span>
+<span style="color: #000000">  </span><span style="color: #001080">search</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">; </span><span style="color: #008000">// The current search</span>
+<span style="color: #000000">  </span><span style="color: #795E26">navigate</span><span style="color: #000000">: (</span><span style="color: #001080">link</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #267F99">void</span><span style="color: #000000">; </span><span style="color: #008000">// The method to redirect to new page</span>
+<span style="color: #000000">}</span>
 </code></pre>
-				<p>You can generate a full clean build with <code>yarn build-all</code> (which uses both <code>tsc</code> and <code>esbuild</code>).</p>
+				<p>Recipes:</p>
 				<ul>
-					<li><code>package.json</code> includes <code>scripts</code> for various esbuild commands: <a href="https://github.com/metachris/typescript-boilerplate/blob/master/package.json#L23">see here</a></li>
-					<li><code>esbuild</code> has a <code>--global-name=xyz</code> flag, to store the exports from the entry point in a global variable. See also the <a href="https://esbuild.github.io/api/#global-name">esbuild &quot;Global name&quot; docs</a>.</li>
-					<li>Read more about the esbuild setup <a href="https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/#esbuild">here</a>.</li>
-					<li>esbuild for the browser uses the IIFE (immediately-invoked function expression) format, which executes the bundled code on load (see also <a href="https://github.com/evanw/esbuild/issues/29">https://github.com/evanw/esbuild/issues/29</a>)</li>
-				</ul>
-				<a href="#tests-with-jest" id="tests-with-jest" style="color: inherit; text-decoration: none;">
-					<h2>Tests with Jest</h2>
-				</a>
-				<p>You can write <a href="https://jestjs.io/docs/getting-started">Jest tests</a> <a href="https://github.com/metachris/typescript-boilerplate/blob/master/src/main.test.ts">like this</a>:</p>
-				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">greet</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;./main&#039;</span>
+					<li><p>For <code>nextjs</code></p>
+						<pre><code class="language-tsx"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">useRouter</span><span style="color: #000000"> </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #001080">useNextRouter</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;next/router&#039;</span><span style="color: #000000">;</span>
 
-<span style="color: #795E26">test</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;the data is peanut butter&#039;</span><span style="color: #000000">, () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #795E26">expect</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">).</span><span style="color: #795E26">toBe</span><span style="color: #000000">(</span><span style="color: #098658">1</span><span style="color: #000000">)</span>
-<span style="color: #000000">});</span>
+<span style="color: #008000">// Wrap your tree with global configuration</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">useRouter</span><span style="color: #000000"> = () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">router</span><span style="color: #000000"> = </span><span style="color: #795E26">useNextRouter</span><span style="color: #000000">();</span>
 
-<span style="color: #795E26">test</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;greeting&#039;</span><span style="color: #000000">, () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">  </span><span style="color: #795E26">expect</span><span style="color: #000000">(</span><span style="color: #795E26">greet</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Foo&#039;</span><span style="color: #000000">)).</span><span style="color: #795E26">toBe</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Hello Foo&#039;</span><span style="color: #000000">)</span>
-<span style="color: #000000">});</span>
+<span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">get</span><span style="color: #000000"> </span><span style="color: #795E26">pathname</span><span style="color: #000000">() {</span>
+<span style="color: #000000">      </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">router</span><span style="color: #000000">.</span><span style="color: #001080">pathname</span><span style="color: #000000">;</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">get</span><span style="color: #000000"> </span><span style="color: #795E26">search</span><span style="color: #000000">() {</span>
+<span style="color: #000000">      </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">router</span><span style="color: #000000">.</span><span style="color: #001080">asPath</span><span style="color: #000000">.</span><span style="color: #795E26">split</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;?&#039;</span><span style="color: #000000">)[</span><span style="color: #098658">1</span><span style="color: #000000">] ?? </span><span style="color: #A31515">&#039;&#039;</span><span style="color: #000000">;</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    </span><span style="color: #795E26">navigate</span><span style="color: #000000">(</span><span style="color: #001080">link</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">) {</span>
+<span style="color: #000000">      </span><span style="color: #001080">router</span><span style="color: #000000">.</span><span style="color: #795E26">push</span><span style="color: #000000">(</span><span style="color: #001080">link</span><span style="color: #000000">);</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">  };</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #008000">// In _app.tsx</span>
+<span style="color: #0000FF">function</span><span style="color: #000000"> </span><span style="color: #795E26">MyApp</span><span style="color: #000000">({ </span><span style="color: #001080">Component</span><span style="color: #000000">, </span><span style="color: #001080">pageProps</span><span style="color: #000000"> }: </span><span style="color: #267F99">any</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  </span><span style="color: #AF00DB">return</span><span style="color: #000000"> (</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;</span><span style="color: #267F99">SearchConfigProvider</span>
+<span style="color: #000000">      </span><span style="color: #FF0000">config</span><span style="color: #000000">=</span><span style="color: #0000FF">{</span><span style="color: #000000FF">{</span>
+<span style="color: #000000FF">        </span><span style="color: #001080">useRouter</span><span style="color: #000000FF">,</span>
+<span style="color: #000000FF">      }</span><span style="color: #0000FF">}</span>
+<span style="color: #000000">    </span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">      </span><span style="color: #800000">&lt;</span><span style="color: #267F99">Component</span><span style="color: #000000"> </span><span style="color: #0000FF">{</span><span style="color: #000000">...</span><span style="color: #001080">pageProps</span><span style="color: #0000FF">}</span><span style="color: #000000"> </span><span style="color: #800000">/&gt;</span>
+<span style="color: #000000">    </span><span style="color: #800000">&lt;/</span><span style="color: #267F99">SearchConfigProvider</span><span style="color: #800000">&gt;</span>
+<span style="color: #000000">  );</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #AF00DB">default</span><span style="color: #000000"> </span><span style="color: #001080">MyApp</span><span style="color: #000000">;</span>
 </code></pre>
-				<p>Run the tests with <code>yarn test</code>, no separate compile step is necessary.</p>
-				<ul>
-					<li>See also the <a href="https://jestjs.io/docs/getting-started">Jest documentation</a>.</li>
-					<li>The tests can be automatically run in CI (GitHub Actions, GitLab CI): <a href="https://github.com/metachris/typescript-boilerplate/blob/master/.github/workflows/lint-and-test.yml"><code>.github/workflows/lint-and-test.yml</code></a>, <a href="https://github.com/metachris/typescript-boilerplate/blob/master/.gitlab-ci.yml"><code>.gitlab-ci.yml</code></a></li>
-					<li>Take a look at other modern test runners such as <a href="https://github.com/avajs/ava">ava</a>, <a href="https://github.com/lukeed/uvu">uvu</a> and <a href="https://github.com/substack/tape">tape</a></li>
-				</ul>
-				<a href="#documentation-published-with-ci" id="documentation-published-with-ci" style="color: inherit; text-decoration: none;">
-					<h2>Documentation, published with CI</h2>
-				</a>
-				<p>You can auto-generate API documentation from the TyoeScript source files using <a href="https://typedoc.org/guides/doccomments/">TypeDoc</a>. The generated documentation can be published to GitHub / GitLab pages through the CI.</p>
-				<p>Generate the documentation, using <code>src/main.ts</code> as entrypoint (configured in package.json):</p>
-				<pre><code class="language-bash"><span style="color: #000000">yarn docs</span>
-</code></pre>
-				<p>The resulting HTML is saved in <code>docs/</code>.</p>
-				<p>You can publish the documentation through CI:</p>
-				<ul>
-					<li><a href="https://pages.github.com/">GitHub pages</a>: See <a href="https://github.com/metachris/typescript-boilerplate/blob/master/.github/workflows/deploy-gh-pages.yml"><code>.github/workflows/deploy-gh-pages.yml</code></a></li>
-					<li><a href="https://docs.gitlab.com/ee/user/project/pages/">GitLab pages</a>: <a href="https://github.com/metachris/typescript-boilerplate/blob/master/.gitlab-ci.yml"><code>.gitlab-ci.yml</code></a></li>
-				</ul>
-				<p>This is the documentation for this boilerplate project: <a href="https://metachris.github.io/typescript-boilerplate/">https://metachris.github.io/typescript-boilerplate/</a></p>
-				<a href="#references" id="references" style="color: inherit; text-decoration: none;">
-					<h2>References</h2>
-				</a>
-				<ul>
-					<li><strong><a href="https://www.metachris.com/2021/03/bootstrapping-a-typescript-node.js-project/">Blog post: Starting a TypeScript Project in 2021</a></strong></li>
-					<li><a href="https://www.typescriptlang.org/docs/handbook/intro.html">TypeScript Handbook</a></li>
-					<li><a href="https://www.typescriptlang.org/tsconfig">tsconfig docs</a></li>
-					<li><a href="https://esbuild.github.io/">esbuild docs</a></li>
-					<li><a href="https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md">typescript-eslint docs</a></li>
-					<li><a href="https://jestjs.io/docs/getting-started">Jest docs</a></li>
-					<li><a href="https://docs.github.com/en/actions">GitHub Actions</a>, <a href="https://docs.gitlab.com/ee/ci/">GitLab CI</a></li>
-				</ul>
-				<a href="#feedback" id="feedback" style="color: inherit; text-decoration: none;">
-					<h2>Feedback</h2>
-				</a>
-				<p>Reach out with feedback and ideas:</p>
-				<ul>
-					<li><a href="https://twitter.com/metachris">twitter.com/metachris</a></li>
-					<li><a href="https://github.com/metachris/typescript-boilerplate/issues">Create a new issue</a></li>
+						<p>Note that, per NextJS document, <a href="https://nextjs.org/docs/api-reference/next/router">router</a>, does not include query information if the page is static. So you&#39;ll need the page to be serverside-generated or you&#39;ll face an inconsistency in the rehydration step! Or, you can leverage <code>useEffect</code> for static pages.</p>
+					</li>
+					<li><p>For <code>react-router-dom</code></p>
+						<p>TBD</p>
+					</li>
 				</ul>
 			</div>
 		</div>
