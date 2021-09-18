@@ -1,122 +1,131 @@
-# TypeScript Boilerplate for 2021
+# Type-checked query string
 
-[![Build and test status](https://github.com/metachris/typescript-boilerplate/workflows/Lint%20and%20test/badge.svg)](https://github.com/metachris/typescript-boilerplate/actions?query=workflow%3A%22Build+and+test%22)
+> `use-search` is a simple library that helps your deal with all the shit with the query string on the url-bar. Handle `search` like you `React.useState`, with validation against arbitrary input!
 
-TypeScript project boilerplate with modern tooling, for Node.js programs, libraries and browser modules. Get started quickly and right-footed 🚀
+## Install
 
-* [TypeScript 4](https://www.typescriptlang.org/)
-* Optionally [esbuild](https://esbuild.github.io/) to bundle for browsers (and Node.js)
-* Linting with [typescript-eslint](https://github.com/typescript-eslint/typescript-eslint) ([tslint](https://palantir.github.io/tslint/) is deprecated)
-* Testing with [Jest](https://jestjs.io/docs/getting-started) (and [ts-jest](https://www.npmjs.com/package/ts-jest))
-* Publishing to npm
-* Continuous integration ([GitHub Actions](https://docs.github.com/en/actions) / [GitLab CI](https://docs.gitlab.com/ee/ci/))
-* Automatic API documentation with [TypeDoc](https://typedoc.org/guides/doccomments/)
-
-See also the introduction blog post: **[Starting a TypeScript Project in 2021](https://www.metachris.com/2021/03/bootstrapping-a-typescript-node.js-project/)**.
-
-
-## Getting Started
-
-```bash
-# Clone the repository (you can also click "Use this template")
-git clone https://github.com/metachris/typescript-boilerplate.git your_project_name
-cd your_project_name
-
-# Edit `package.json` and `tsconfig.json` to your liking
-...
-
-# Install dependencies
-yarn install
-
-# Now you can run various yarn commands:
-yarn cli
-yarn lint
-yarn test
-yarn build-all
-yarn ts-node <filename>
-yarn esbuild-browser
-...
+```
+yarn add @monoid-dev/use-search
 ```
 
-* Take a look at all the scripts in [`package.json`](https://github.com/metachris/typescript-boilerplate/blob/master/package.json)
-* For publishing to npm, use `yarn publish` (or `npm publish`)
+## Usage
 
-## esbuild
+```tsx
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-[esbuild](https://esbuild.github.io/) is an extremely fast bundler that supports a [large part of the TypeScript syntax](https://esbuild.github.io/content-types/#typescript). This project uses it to bundle for browsers (and Node.js if you want).
+import * as t from 'io-ts'; // For more information about io-ts, please click https://gcanti.github.io/io-ts/
 
-```bash
-# Build for browsers
-yarn esbuild-browser:dev
-yarn esbuild-browser:watch
+import useSearch, { SearchConfigProvider } from '@monoid-dev/use-search';
 
-# Build the cli for node
-yarn esbuild-node:dev
-yarn esbuild-node:watch
+export const Page = () => {
+  const {
+    search, // The parsed { id: string | undefined } object
+    updateSearch, // The method to update the object
+  } = useSearch(t.type({
+    id: t.union([t.undefined,  t.string]),  // Define your query type here
+  }));
+
+  return (
+    <>
+      {JSON.stringify(search)}
+
+      <button
+        onClick={() => updateSearch({ id: String(parseInt(search?.id ?? '0') + 1) })}
+      >
+        Update Search
+      </button>
+    </>
+  );
+};
+
+ReactDOM.render((
+  <SearchConfigProvider>
+    <Page />
+  </SearchConfigProvider>
+), document.body);
 ```
 
-You can generate a full clean build with `yarn build-all` (which uses both `tsc` and `esbuild`).
+## APIs
 
-* `package.json` includes `scripts` for various esbuild commands: [see here](https://github.com/metachris/typescript-boilerplate/blob/master/package.json#L23)
-* `esbuild` has a `--global-name=xyz` flag, to store the exports from the entry point in a global variable. See also the [esbuild "Global name" docs](https://esbuild.github.io/api/#global-name).
-* Read more about the esbuild setup [here](https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/#esbuild).
-* esbuild for the browser uses the IIFE (immediately-invoked function expression) format, which executes the bundled code on load (see also https://github.com/evanw/esbuild/issues/29)
++ useSearch
 
+  ```tsx
+  function useSearch<T>(type: t.Type<T>, config?: UseSearchConfig)
+  ```
+  Parameters:
+    + `type` The `io-ts` type of the parsed search.
+    + `config` The local [configuration](#UseSearchConfig) for the search, shallowly merged with the current `UseSearchConfig` in the context.
 
-## Tests with Jest
+  Return Type:
+    + `search: T | undefined` The parsed and validated search string. Returns `undefined` when there's an error.
+    + `setSearch: T` Reset the search string, navigating to the new href.
+    + `updateSearch: Partial<T>` Partially update the search string, navigating to the new href.
 
-You can write [Jest tests](https://jestjs.io/docs/getting-started) [like this](https://github.com/metachris/typescript-boilerplate/blob/master/src/main.test.ts):
++ UseSearchConfig
 
-```typescript
-import { greet } from './main'
-
-test('the data is peanut butter', () => {
-  expect(1).toBe(1)
-});
-
-test('greeting', () => {
-  expect(greet('Foo')).toBe('Hello Foo')
-});
+```tsx
+interface UseSearchConfig {
+  parse?: (q: string) => unknown; // The method to parse the search string, by default using `query-string` with `{ arrayFormat: 'bracket-separator' }`.
+  stringify?: (v: Record<string, unknown>) => string; // The method to stringify the search string from your object, by default using `query-string` with `{ arrayFormat: 'bracket-separator' }`.
+  errorPolicy?: 'throw' | 'return'; // If 'throw', throws an error when an error happens. Warning: will cause a white screen when ErrorBoundary is not set up.
+  useRouter?: () => Router; // The function that returns a Router object. It is called once per rendering thus safe to pass a React hook here. By default uses the native window.location methods. See API Router.
+  omitValue?: (value: unknown) => void; // When to omit value in the query string. By default we omit `undefiend`, `null` and empty or all-whitespace strings.
+}
 ```
 
-Run the tests with `yarn test`, no separate compile step is necessary.
++ Router
 
-* See also the [Jest documentation](https://jestjs.io/docs/getting-started).
-* The tests can be automatically run in CI (GitHub Actions, GitLab CI): [`.github/workflows/lint-and-test.yml`](https://github.com/metachris/typescript-boilerplate/blob/master/.github/workflows/lint-and-test.yml), [`.gitlab-ci.yml`](https://github.com/metachris/typescript-boilerplate/blob/master/.gitlab-ci.yml)
-* Take a look at other modern test runners such as [ava](https://github.com/avajs/ava), [uvu](https://github.com/lukeed/uvu) and [tape](https://github.com/substack/tape)
-
-## Documentation, published with CI
-
-You can auto-generate API documentation from the TyoeScript source files using [TypeDoc](https://typedoc.org/guides/doccomments/). The generated documentation can be published to GitHub / GitLab pages through the CI.
-
-Generate the documentation, using `src/main.ts` as entrypoint (configured in package.json):
-
-```bash
-yarn docs
+```tsx
+interface Router {
+  pathname: string; // The current pathname, e.g. the `/search` https://www.google.com.hk/search?q=ErrorBoundary
+  search: string; // The current search
+  navigate: (link: string) => void; // The method to redirect to new page
+}
 ```
 
-The resulting HTML is saved in `docs/`.
+Recipes:
 
-You can publish the documentation through CI:
-* [GitHub pages](https://pages.github.com/): See [`.github/workflows/deploy-gh-pages.yml`](https://github.com/metachris/typescript-boilerplate/blob/master/.github/workflows/deploy-gh-pages.yml)
-* [GitLab pages](https://docs.gitlab.com/ee/user/project/pages/): [`.gitlab-ci.yml`](https://github.com/metachris/typescript-boilerplate/blob/master/.gitlab-ci.yml)
++ For `nextjs`
 
-This is the documentation for this boilerplate project: https://metachris.github.io/typescript-boilerplate/
+  ```tsx
+  import { useRouter as useNextRouter } from 'next/router';
 
-## References
+  // Wrap your tree with global configuration
+  const useRouter = () => {
+    const router = useNextRouter();
 
-* **[Blog post: Starting a TypeScript Project in 2021](https://www.metachris.com/2021/03/bootstrapping-a-typescript-node.js-project/)**
-* [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
-* [tsconfig docs](https://www.typescriptlang.org/tsconfig)
-* [esbuild docs](https://esbuild.github.io/)
-* [typescript-eslint docs](https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md)
-* [Jest docs](https://jestjs.io/docs/getting-started)
-* [GitHub Actions](https://docs.github.com/en/actions), [GitLab CI](https://docs.gitlab.com/ee/ci/)
+    return {
+      get pathname() {
+        return router.pathname;
+      },
+      get search() {
+        return router.asPath.split('?')[1] ?? '';
+      },
+      navigate(link: string) {
+        router.push(link);
+      },
+    };
+  };
 
+  // In _app.tsx
+  function MyApp({ Component, pageProps }: any) {
+    return (
+      <SearchConfigProvider
+        config={{
+          useRouter,
+        }}
+      >
+        <Component {...pageProps} />
+      </SearchConfigProvider>
+    );
+  }
 
-## Feedback
+  export default MyApp;
+  ```
 
-Reach out with feedback and ideas:
+  Note that, per NextJS document, [router](https://nextjs.org/docs/api-reference/next/router), does not include query information if the page is static. So you'll need the page to be serverside-generated or you'll face an inconsistency in the rehydration step! Or, you can leverage `useEffect` for static pages.
 
-* [twitter.com/metachris](https://twitter.com/metachris)
-* [Create a new issue](https://github.com/metachris/typescript-boilerplate/issues)
++ For `react-router-dom`
+
+  TBD

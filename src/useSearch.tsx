@@ -3,7 +3,11 @@ import React, { useContext, useMemo } from 'react';
 
 import * as t from 'io-ts';
 import { parse, stringify } from 'query-string';
+import type { Left } from 'fp-ts/lib/Either';
 
+export class InvalidSearch {
+  constructor(public message: string, public e: Left<t.Errors>) {}
+}
 export interface Router {
   pathname: string;
   search: string;
@@ -59,7 +63,7 @@ export const SearchConfigProvider: React.FC<UseSearchProviderProps> = ({ childre
   );
 };
 
-export function useSearch<T>(type: t.Type<T>, config?: UseSearchConfig) {
+export function useSearch<T extends Record<string, unknown>>(type: t.Type<T>, config?: UseSearchConfig) {
   const contextConfig = useContext(SearchConfigContext) as ResolvedUseSearchConfig;
   const finalConfig = useMemo(() => ({
     ...contextConfig,
@@ -76,7 +80,19 @@ export function useSearch<T>(type: t.Type<T>, config?: UseSearchConfig) {
     [type, searchString, finalConfig.parse],
   );
 
+  if (e._tag === 'Left' && finalConfig.errorPolicy === 'throw') {
+    throw new InvalidSearch('Invalid search', e);
+  }
+
   const search = e._tag === 'Left' ? undefined : e.right;
+
+  const setSearch = (p: T) => {
+    const newSearchString = finalConfig.stringify(p);
+
+    const optionalQuestionMark = newSearchString ? '?' : '';
+
+    router.navigate(`${pathname}${optionalQuestionMark}${newSearchString}`);
+  };
 
   return {
     search,
@@ -94,11 +110,8 @@ export function useSearch<T>(type: t.Type<T>, config?: UseSearchConfig) {
         }
       }
 
-      const newSearchString = finalConfig.stringify(newSearch);
-
-      const optionalQuestionMark = newSearchString ? '?' : '';
-
-      router.navigate(`${pathname}${optionalQuestionMark}${newSearchString}`);
+      setSearch(newSearch);
     },
+    setSearch,
   }
 }

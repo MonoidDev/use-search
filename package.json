@@ -1,18 +1,22 @@
 {
   "name": "@monoid-dev/use-search",
   "version": "0.1.0",
+  "private": false,
   "description": "React hook with sanitized and parsed search string. ",
   "author": "Chenyu Wang <cwang592@usc.edu>",
   "repository": "https://github.com/MonoidDev/use-search",
   "license": "MIT",
   "keywords": [
     "typescript",
-    "boilerplate",
-    "esbuild"
+    "io-ts",
+    "url",
+    "type",
+    "browser",
+    "react"
   ],
-  "main": "./dist/cjs/main.js",
-  "module": "./dist/esm/main.js",
-  "types": "./dist/tsc/main.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
   "scripts": {
     "cli": "ts-node src/cli.ts",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
@@ -20,8 +24,8 @@
     "clean": "rm -rf dist build package",
     "ts-node": "ts-node",
     "docs": "typedoc --entryPoints src/main.ts",
-    "build:cjs": "tsc --module commonjs --target es5 --outDir dist/cjs",
-    "build:esm": "tsc --module es2015 --target es5 --outDir dist/esm",
+    "build:cjs": "tsc --module commonjs --target es6 --outDir dist/cjs",
+    "build:esm": "tsc --module es2015 --target es6 --outDir dist/esm",
     "build-all": "yarn clean && yarn build:cjs && yarn build:esm",
     "esbuild-browser:watch": "esbuild src/browser.tsx --bundle --watch --outfile=dist/esbuild/browser.js",
     "prepare": "yarn lint && yarn build-all"
@@ -51,5 +55,8 @@
     "fp-ts": "^2.11.2",
     "io-ts": "^2.2.16",
     "query-string": "^7.0.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
